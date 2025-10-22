@@ -13,7 +13,7 @@ use Mchekhashvili\Rsservice\Dtos\ServiceUserDto;
  */
 interface ConnectionContract
 {
-    public function getServiceUsers(MainUserDto $mainUserDto);
-    public function checkServiceUser(ServiceUserDto $serviceUser);
-    public function getErrorCodes(ServiceUserDto $serviceUser);
+    public function getServiceUsers(MainUserDto $mainUserDto): array;
+    public function checkServiceUser(ServiceUserDto $serviceUser): bool;
+    public function getErrorCodes(ServiceUserDto $serviceUser): array;
 }

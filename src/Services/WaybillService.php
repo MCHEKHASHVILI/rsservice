@@ -12,7 +12,7 @@ class WaybillService extends RSService
 {
     public function __construct(protected ConnectionContract $connectionContract) {}
 
-    public function checkServiceUser(ServiceUserDto $serviceUserDto)
+    public function checkServiceUser(ServiceUserDto $serviceUserDto): bool
     {
         return $this->connectionContract->checkServiceUser($serviceUserDto);
     }
@@ -22,7 +22,7 @@ class WaybillService extends RSService
         return $this->connectionContract->getErrorCodes($serviceUserDto);
     }
 
-    public function getServiceUsers(MainUserDto $mainUserDto)
+    public function getServiceUsers(MainUserDto $mainUserDto): array
     {
         return $this->connectionContract->getServiceUsers($mainUserDto);
     }

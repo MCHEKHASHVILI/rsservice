@@ -27,25 +27,27 @@ class WaybillServiceTest extends TestCase
         $this->serviceUserDto = new ServiceUserDto("rsserviceuser:206322102", "Password123!@#");
         $this->waybillService = new WaybillService($this->connection);
     }
-    public function test_waybill_service_can_get_all_service_users()
+    public function test_waybill_our_service_user_is_registered()
     {
-        $checked = $this->waybillService->checkServiceUser($this->serviceUserDto);
-        // dd($checked);
-        // $this->assertIsBool($waybillService->checkServiceUser($serviceUser));
+        $users = $this->waybillService->getServiceUsers($this->mainUserDto);
+        $this->assertNotEmpty($users);
+        $this->assertArrayHasKey("USER_NAME", $users[0]);
+        $ourServiceUser = array_filter($users, fn($user) => strtolower($user['USER_NAME'])  === $this->serviceUserDto->su, ARRAY_FILTER_USE_BOTH);
+        $this->assertNotEmpty($ourServiceUser);
     }
 
     public function test_waybill_service_can_check_service_user()
     {
-        $users = $this->waybillService->getServiceUsers($this->mainUserDto);
-        dd($users, "there");
-        // $this->assertIsBool($waybillService->checkServiceUser($serviceUser));
+        $checked = $this->waybillService->checkServiceUser($this->serviceUserDto);
+        $this->assertIsBool($checked);
+        $this->assertTrue($checked);
     }
 
     public function test_waybill_service_can_get_error_codes()
     {
-        // $errorCodes = $this->waybillService->getErrorCodes($this->serviceUserDto);
-        // $errorCodes = $this->connection->client->__soapCall("chek_service_user", ['su' => 'RSSERVICEUSER:206322102', 'sp' => 'Password123!@#']);
+        $errorCodes = $this->waybillService->getErrorCodes($this->serviceUserDto);
 
-        // dd($errorCodes, "here");
+        $this->assertIsArray($errorCodes);
+        $this->assertNotEmpty($errorCodes);
     }
 }
