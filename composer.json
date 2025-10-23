@@ -1,0 +1,32 @@
+{
+    "name": "mchekhashvili/rsservice",
+    "description": "PHP package to handle rs operations",
+    "autoload": {
+        "psr-4": {
+            "Mchekhashvili\\Rsservice\\": "src/",
+            "Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mikheil Chekhashvili",
+            "email": "m.chekhashvili@gmail.com"
+        }
+    ],
+    "scripts": {
+        "pest": "vendor/bin/pest"
+    },
+    "require": {
+        "symfony/var-dumper": "^7.3",
+        "saloonphp/saloon": "^3.0",
+        "saloonphp/xml-wrangler": "^1.4"
+    },
+    "require-dev": {
+        "pestphp/pest": "^3.8"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}
