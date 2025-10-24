@@ -4,24 +4,18 @@ declare(strict_types=1);
 
 namespace RS\Services;
 
+use RS\Traits\HasReferences;
 use Saloon\XmlWrangler\XmlWriter;
 use RS\Enums\SoapApiRequestHeader;
 use Saloon\XmlWrangler\Data\Element;
-use RS\Enums\Actions\WaybillServiceAction;
 use RS\Http\Connectors\WaybillServiceConnector;
 use RS\Http\Requests\Waybill\GetWaybillRequest;
 use RS\XmlElements\ServiceUserCredentialsElement;
 use RS\Http\Requests\Waybill\CheckServiceUserRequest;
-use RS\Http\Requests\Waybill\WaybillReferenceRequest;
-use RS\Http\Responses\Waybill\GetExciseCodesResponse;
-use RS\Http\Responses\Waybill\GetWaybillTypesResponse;
-use RS\Http\Responses\Waybill\GetWaybillUnitsResponse;
-use RS\Http\Responses\Waybill\GetErrorCodesResponse;
-use RS\Http\Responses\Waybill\GetTransportationTypesResponse;
-use RS\Http\Responses\Waybill\GetWoodTypesResponse;
 
 final class WaybillService
 {
+    use HasReferences;
     public function __construct(
         /**
          * Declare params __construct
@@ -60,63 +54,7 @@ final class WaybillService
         return $this->connector->send($request)->getPayersUnId();
     }
 
-    /**
-     * Retrieve error codes
-     * @param \RS\Http\Requests\Waybill\WaybillReferenceRequest $request
-     * @return array
-     */
-    public function getErrorCodes(WaybillReferenceRequest $request = new WaybillReferenceRequest(WaybillServiceAction::GET_ERROR_CODES)): array
-    {
-        return $this->connector->send($request)->parsed();
-    }
 
-    /**
-     * Retrieve excise codes
-     * @param \RS\Http\Requests\Waybill\WaybillReferenceRequest $request
-     * @return array
-     */
-    public function getExciseCodes(WaybillReferenceRequest $request = new WaybillReferenceRequest(WaybillServiceAction::GET_EXCISE_CODES)): array
-    {
-        return $this->connector->send($request)->parsed();
-    }
-    /**
-     * Retrieve waybill types
-     * @param \RS\Http\Requests\Waybill\WaybillReferenceRequest $request
-     * @return array
-     */
-    public function getWaybillTypes(WaybillReferenceRequest $request = new WaybillReferenceRequest(WaybillServiceAction::GET_WAYBILL_TYPES)): array
-    {
-        return $this->connector->send($request)->parsed();
-    }
-
-    /**
-     * Retrieve waybill types
-     * @param \RS\Http\Requests\Waybill\WaybillReferenceRequest $request
-     * @return array
-     */
-    public function getWaybillUnits(WaybillReferenceRequest $request = new WaybillReferenceRequest(WaybillServiceAction::GET_WAYBILL_UNITS)): array
-    {
-        return $this->connector->send($request)->parsed();
-    }
-
-    /**
-     * Retrieve transportation types
-     * @param \RS\Http\Requests\Waybill\WaybillReferenceRequest $request
-     * @return array
-     */
-    public function getTransportationTypes(WaybillReferenceRequest $request = new WaybillReferenceRequest(WaybillServiceAction::GET_TRANSPORTATION_TYPES)): array
-    {
-        return $this->connector->send($request)->parsed();
-    }
-    /**
-     * Retrieve transportation types
-     * @param \RS\Http\Requests\Waybill\WaybillReferenceRequest $request
-     * @return array
-     */
-    public function getWoodTypes(WaybillReferenceRequest $request = new WaybillReferenceRequest(WaybillServiceAction::GET_WOOD_TYPES)): array
-    {
-        return $this->connector->send($request)->parsed();
-    }
 
     public function getWaybillById(string $waybillId, GetWaybillRequest $request = new GetWaybillRequest())
     {
