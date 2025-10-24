@@ -1,21 +1,44 @@
 <?php
 
-use Saloon\Http\Response;
-use Saloon\XmlWrangler\XmlReader;
-use Saloon\Exceptions\Request\RequestException;
-use Mchekhashvili\Rsservice\Requests\CheckServiceUserRequest;
+use Mchekhashvili\Rsservice\Requests\WaybillServiceRequests\CheckServiceUserRequest;
 use Mchekhashvili\Rsservice\Connectors\WaybillServiceConnector;
+use Mchekhashvili\Rsservice\Requests\WaybillServiceRequests\GetExciseCodesRequest;
+use Mchekhashvili\Rsservice\Requests\WaybillServiceRequests\GetWaybillTypesRequest;
 
-test('Checks service user', function () {
-    $connector = new WaybillServiceConnector();
-    $promise = $connector->sendAsync(new CheckServiceUserRequest())
-        ->then(function (Response $response) {
-            $reader = XmlReader::fromString($response->body());
-            $results = $reader->value('soap:Envelope.soap:Body.chek_service_userResponse')->sole();
-            expect($results["chek_service_userResult"])->toBe("true");
-        })
-        ->otherwise(function (RequestException $exception) {
-            throw $exception;
-        });
-    $promise->wait();
+beforeEach(fn() => $this->connector = new WaybillServiceConnector());
+
+describe('CheckServiceUserRequest:', function () {
+    beforeEach(fn() => $this->request = new CheckServiceUserRequest());
+    test("getting response true", function () {
+        expect(($this->connector)
+                ->send($this->request)
+                ->xmlReader()
+                ->value("soap:Envelope.soap:Body.{$this->request->getOperation()}Response")
+                ->sole()["{$this->request->getOperation()}Result"]
+        )->toBe("true", "some error occured");
+    });
+});
+
+describe('GetExciseCodesRequest:', function () {
+    beforeEach(fn() => $this->request = new GetExciseCodesRequest());
+    test("response returns array", function () {
+        expect(($this->connector)
+                ->send($this->request)
+                ->xmlReader()
+                ->value("soap:Envelope.soap:Body.{$this->request->getOperation()}Response")
+                ->sole()["{$this->request->getOperation()}Result"]
+        )->toBeArray("Result must be array");
+    });
+});
+
+describe('GetWaybillTypesRequest:', function () {
+    beforeEach(fn() => $this->request = new GetWaybillTypesRequest());
+    test("response returns array", function () {
+        expect(($this->connector)
+                ->send($this->request)
+                ->xmlReader()
+                ->value("soap:Envelope.soap:Body.{$this->request->getOperation()}Response")
+                ->sole()["{$this->request->getOperation()}Result"]
+        )->toBeArray("Result must be array");
+    });
 });
