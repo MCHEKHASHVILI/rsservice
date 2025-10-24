@@ -1,6 +1,8 @@
 <?php
 
-namespace Mchekhashvili\Rsservice\Connectors;
+declare(strict_types=1);
+
+namespace RS\Connectors;
 
 use Saloon\Http\Connector;
 

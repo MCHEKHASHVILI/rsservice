@@ -3,7 +3,7 @@
     "description": "PHP package to handle rs operations",
     "autoload": {
         "psr-4": {
-            "Mchekhashvili\\Rsservice\\": "src/",
+            "RS\\": "src/",
             "Tests\\": "tests/"
         }
     },
