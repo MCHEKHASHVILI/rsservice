@@ -72,7 +72,7 @@ final class WaybillService
         return $this->connector->send($request)->parsed();
     }
 
-    public function getWaybillById(int $waybillId, GetWaybillRequest $request = new GetWaybillRequest())
+    public function getWaybillById(string $waybillId, GetWaybillRequest $request = new GetWaybillRequest())
     {
         $request->body()->set(XmlWriter::make()->write(
             $request->defaultRootElement(),
@@ -82,6 +82,26 @@ final class WaybillService
                         array_merge(
                             (new ServiceUserCredentialsElement())->getContent(),
                             ["waybill_id" => $waybillId]
+                        )
+                    )->addAttribute("xmlns", SoapApiRequestHeader::ACTION_URL->value)
+
+                ]
+            ]
+        ));
+
+        return $this->connector->send($request)->parsed();
+    }
+
+    public function getWaybillByNumber(string $number, GetWaybillRequest $request = new GetWaybillRequest("get_waybill_by_number"))
+    {
+        $request->body()->set(XmlWriter::make()->write(
+            $request->defaultRootElement(),
+            [
+                "soap:Body" => [
+                    $request->action => Element::make(
+                        array_merge(
+                            (new ServiceUserCredentialsElement())->getContent(),
+                            ["waybill_number" => $number]
                         )
                     )->addAttribute("xmlns", SoapApiRequestHeader::ACTION_URL->value)
 

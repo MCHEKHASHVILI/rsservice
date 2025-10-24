@@ -6,17 +6,31 @@ namespace RS\Http\Responses\Waybill;
 
 use RS\Http\Responses\Waybill\WaybillServiceResponse;
 
+
 class GetWaybillResponse extends WaybillServiceResponse
 {
-    public function parsed(): mixed
+
+    /**
+     * Check if resourse is retrieved
+     * @return bool
+     */
+    public function resourceRetrieved(): bool
     {
-        return $this->xmlReader()
-            ->value("soap:Envelope.soap:Body.{$this->getSOAPAction()}Response")
-            ->sole();
+        return !($this->getResponseStatusCode() < 0);
     }
 
-    protected function getSOAPAction(): string
+    /**
+     * Get Exact status code from response
+     * 0 means success
+     * @return int
+     */
+    public function getResponseStatusCode(): int
     {
-        return trim(parse_url($this->pendingRequest->headers()->get("SOAPAction"))['path'], "/");
+        return (int) (parent::parsed()[$this->getSOAPAction() . "Result"]["RESULT"]["STATUS"] ?? 0);
+    }
+
+    public function parsed(): array
+    {
+        return parent::parsed()[$this->getSoapAction() . "Result"]["WAYBILL"];
     }
 }

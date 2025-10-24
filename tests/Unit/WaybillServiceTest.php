@@ -5,6 +5,7 @@ use Saloon\XmlWrangler\XmlWriter;
 use RS\Enums\SoapApiRequestHeader;
 use Saloon\XmlWrangler\Data\Element;
 use RS\Http\Requests\Waybill\CheckServiceUserRequest;
+use Saloon\Exceptions\Request\Statuses\NotFoundException;
 use Saloon\Exceptions\Request\Statuses\UnauthorizedException;
 
 beforeEach(fn() => $this->service = new WaybillService());
@@ -23,20 +24,20 @@ describe("Check Service User:", function () {
     });
     describe("Invalid Credentials:", function () {
         beforeEach(function () {
-            $this->request = new CheckServiceUserRequest();
-            $this->request->body()->set(XmlWriter::make()->write(
-                $this->request->defaultRootElement(),
+            $request = new CheckServiceUserRequest();
+            $request->body()->set(XmlWriter::make()->write(
+                $request->defaultRootElement(),
                 [
                     "soap:Body" => [
-                        $this->request->action => Element::make()
-                            ->setContent([
-                                "su" => "invalid_su",
-                                "sp" => "invalid_sp",
-                            ])
+                        $request->action => Element::make([
+                            "su" => "invalid_su",
+                            "sp" => "invalid_sp",
+                        ])
                             ->addAttribute("xmlns", SoapApiRequestHeader::ACTION_URL->value)
                     ]
                 ]
             ));
+            $this->request = $request;
         });
 
         it("throws \Saloon\Exceptions\Request\Statuses\UnauthorizedException on Invalid Credentials", function () {
@@ -58,7 +59,20 @@ describe('Get Waybill Types:', function () {
 });
 
 describe('Retrieve waybill:', function () {
-    test("retrieves waybill by id", function () {
-        expect($this->service->getWaybillByID(123456))->toBeArray("Result must be array");
+    describe("by valid inputs:", function () {
+        test("id", function () {
+            expect($this->service->getWaybillByID('975534966'))->toBeArray("Result must be array");
+        });
+        test("number", function () {
+            expect($this->service->getWaybillByNumber('0935463264'))->toBeArray("Result must be array");
+        });
+    });
+    describe("by invalid inputs:", function () {
+        it("throws \Saloon\Exceptions\Request\Statuses\NotFoundException on invalid id", function () {
+            $this->service->getWaybillByID('1234567890');
+        })->throws(NotFoundException::class);
+        it("throws \Saloon\Exceptions\Request\Statuses\NotFoundException on invalid number", function () {
+            $this->service->getWaybillByNumber('1234567890');
+        })->throws(NotFoundException::class);
     });
 });

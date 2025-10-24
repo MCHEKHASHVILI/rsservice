@@ -2,10 +2,10 @@
 
 namespace RS\Http\Requests\Waybill;
 
-use Saloon\XmlWrangler\XmlWriter;
-use RS\Enums\SoapApiRequestHeader;
+use Throwable;
+use Saloon\Http\Response;
 use RS\Http\Responses\Waybill\GetWaybillResponse;
-use RS\XmlElements\ServiceUserCredentialsElement;
+use Saloon\Exceptions\Request\Statuses\NotFoundException;
 
 class GetWaybillRequest extends WaybillServiceRequest
 {
@@ -19,20 +19,13 @@ class GetWaybillRequest extends WaybillServiceRequest
         public readonly string $action = "get_waybill"
     ) {}
 
-    /**
-     * Override in actual request class
-     * @return string
-     */
-    protected function defaultBody(): string
+    public function hasRequestFailed(Response $response): ?bool
     {
-        return XmlWriter::make()->write(
-            $this->defaultRootElement(),
-            [
-                "soap:Body" => [
-                    $this->action => (new ServiceUserCredentialsElement)
-                        ->addAttribute("xmlns", SoapApiRequestHeader::ACTION_URL->value)
-                ]
-            ]
-        );
+        return ! $response->resourceRetrieved();
+    }
+
+    public function getRequestException(Response $response, ?Throwable $senderException): ?Throwable
+    {
+        return new NotFoundException($response, 'Waybill not found', 404, $senderException);
     }
 }
