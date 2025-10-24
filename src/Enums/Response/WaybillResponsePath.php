@@ -1,0 +1,15 @@
+<?php
+
+declare(strict_types=1);
+
+namespace RS\Enums\Response;
+
+enum WaybillResponsePath: string
+{
+    case GET_ERROR_CODES = "ERROR_CODES.ERROR_CODE";
+    case GET_EXCISE_CODES = "AKCIZ_CODES.AKCIZ_CODE";
+    case GET_WAYBILL_TYPES = "WAYBILL_TYPES.WAYBILL_TYPE";
+    case GET_WOOD_TYPES = "WOOD_TYPES.WOOD_TYPE";
+    case GET_TRANSPORTATION_TYPES = "TRANSPORT_TYPES.TRANSPORT_TYPE";
+    case GET_WAYBILL_UNITS = "WAYBILL_UNITS.WAYBILL_UNIT";
+}

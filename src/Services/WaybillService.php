@@ -65,7 +65,7 @@ final class WaybillService
      * @param \RS\Http\Requests\Waybill\WaybillReferenceRequest $request
      * @return array
      */
-    public function getErrorCodes(WaybillReferenceRequest $request = new WaybillReferenceRequest(WaybillServiceAction::GET_ERROR_CODES->value, GetErrorCodesResponse::class)): array
+    public function getErrorCodes(WaybillReferenceRequest $request = new WaybillReferenceRequest(WaybillServiceAction::GET_ERROR_CODES)): array
     {
         return $this->connector->send($request)->parsed();
     }
@@ -75,7 +75,7 @@ final class WaybillService
      * @param \RS\Http\Requests\Waybill\WaybillReferenceRequest $request
      * @return array
      */
-    public function getExciseCodes(WaybillReferenceRequest $request = new WaybillReferenceRequest(WaybillServiceAction::GET_EXCISE_CODES->value, GetExciseCodesResponse::class)): array
+    public function getExciseCodes(WaybillReferenceRequest $request = new WaybillReferenceRequest(WaybillServiceAction::GET_EXCISE_CODES)): array
     {
         return $this->connector->send($request)->parsed();
     }
@@ -84,7 +84,7 @@ final class WaybillService
      * @param \RS\Http\Requests\Waybill\WaybillReferenceRequest $request
      * @return array
      */
-    public function getWaybillTypes(WaybillReferenceRequest $request = new WaybillReferenceRequest(WaybillServiceAction::GET_WAYBILL_TYPES->value, GetWaybillTypesResponse::class)): array
+    public function getWaybillTypes(WaybillReferenceRequest $request = new WaybillReferenceRequest(WaybillServiceAction::GET_WAYBILL_TYPES)): array
     {
         return $this->connector->send($request)->parsed();
     }
@@ -94,7 +94,7 @@ final class WaybillService
      * @param \RS\Http\Requests\Waybill\WaybillReferenceRequest $request
      * @return array
      */
-    public function getWaybillUnits(WaybillReferenceRequest $request = new WaybillReferenceRequest(WaybillServiceAction::GET_WAYBILL_UNITS->value, GetWaybillUnitsResponse::class)): array
+    public function getWaybillUnits(WaybillReferenceRequest $request = new WaybillReferenceRequest(WaybillServiceAction::GET_WAYBILL_UNITS)): array
     {
         return $this->connector->send($request)->parsed();
     }
@@ -104,7 +104,7 @@ final class WaybillService
      * @param \RS\Http\Requests\Waybill\WaybillReferenceRequest $request
      * @return array
      */
-    public function getTransportationTypes(WaybillReferenceRequest $request = new WaybillReferenceRequest(WaybillServiceAction::GET_TRANSPORTATION_TYPES->value, GetTransportationTypesResponse::class)): array
+    public function getTransportationTypes(WaybillReferenceRequest $request = new WaybillReferenceRequest(WaybillServiceAction::GET_TRANSPORTATION_TYPES)): array
     {
         return $this->connector->send($request)->parsed();
     }
@@ -113,7 +113,7 @@ final class WaybillService
      * @param \RS\Http\Requests\Waybill\WaybillReferenceRequest $request
      * @return array
      */
-    public function getWoodTypes(WaybillReferenceRequest $request = new WaybillReferenceRequest(WaybillServiceAction::GET_WOOD_TYPES->value, GetWoodTypesResponse::class)): array
+    public function getWoodTypes(WaybillReferenceRequest $request = new WaybillReferenceRequest(WaybillServiceAction::GET_WOOD_TYPES)): array
     {
         return $this->connector->send($request)->parsed();
     }

@@ -10,6 +10,7 @@ abstract class WaybillServiceResponse extends Response
 {
     public function parsed(): mixed
     {
+
         return $this->xmlReader()
             ->value("soap:Envelope.soap:Body.{$this->getSOAPAction()}Response")
             ->sole();
