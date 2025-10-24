@@ -6,10 +6,10 @@ namespace RS\Http\Responses\Waybill;
 
 use RS\Http\Responses\Waybill\WaybillServiceResponse;
 
-class GetWaybillTypesResponse extends WaybillServiceResponse
+class GetTransportationTypesResponse extends WaybillServiceResponse
 {
     public function parsed(): array
     {
-        return parent::parsed()[$this->getSoapAction() . "Result"]["WAYBILL_TYPES"]["WAYBILL_TYPE"];
+        return parent::parsed()[$this->getSoapAction() . "Result"]["TRANSPORT_TYPES"]["TRANSPORT_TYPE"];
     }
 }

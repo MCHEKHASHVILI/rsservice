@@ -6,18 +6,12 @@ use Saloon\XmlWrangler\XmlWriter;
 use RS\Enums\SoapApiRequestHeader;
 use RS\XmlElements\ServiceUserCredentialsElement;
 use RS\Http\Requests\Waybill\WaybillServiceRequest;
-use RS\Http\Responses\Waybill\GetWaybillTypesResponse;
 
-class GetWaybillTypesRequest extends WaybillServiceRequest
+class WaybillReferenceRequest extends WaybillServiceRequest
 {
-    protected ?string $response = GetWaybillTypesResponse::class;
     public function __construct(
-        /**
-         * RS Service Operation name
-         * as declared in their documentation
-         * @var string $action
-         */
-        public readonly string $action = "get_waybill_types"
+        public readonly string $action,
+        protected ?string $response
     ) {}
 
     /**

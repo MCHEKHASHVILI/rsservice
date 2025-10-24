@@ -7,20 +7,26 @@ namespace RS\Services;
 use Saloon\XmlWrangler\XmlWriter;
 use RS\Enums\SoapApiRequestHeader;
 use Saloon\XmlWrangler\Data\Element;
+use RS\Enums\Actions\WaybillServiceAction;
 use RS\Http\Connectors\WaybillServiceConnector;
 use RS\Http\Requests\Waybill\GetWaybillRequest;
 use RS\XmlElements\ServiceUserCredentialsElement;
-use RS\Http\Requests\Waybill\GetExciseCodesRequest;
-use RS\Http\Requests\Waybill\GetWaybillTypesRequest;
 use RS\Http\Requests\Waybill\CheckServiceUserRequest;
+use RS\Http\Requests\Waybill\WaybillReferenceRequest;
+use RS\Http\Responses\Waybill\GetExciseCodesResponse;
+use RS\Http\Responses\Waybill\GetWaybillTypesResponse;
+use RS\Http\Responses\Waybill\GetWaybillUnitsResponse;
+use RS\Http\Responses\Waybill\GetErrorCodesResponse;
+use RS\Http\Responses\Waybill\GetTransportationTypesResponse;
+use RS\Http\Responses\Waybill\GetWoodTypesResponse;
 
 final class WaybillService
 {
-    /**
-     * Declare params __construct
-     * @param \RS\Http\Connectors\WaybillServiceConnector $connector
-     */
     public function __construct(
+        /**
+         * Declare params __construct
+         * @param \RS\Http\Connectors\WaybillServiceConnector $connector
+         */
         protected readonly WaybillServiceConnector $connector = new WaybillServiceConnector()
     ) {}
 
@@ -53,21 +59,61 @@ final class WaybillService
     {
         return $this->connector->send($request)->getPayersUnId();
     }
+
     /**
-     * Retrieve excise codes
-     * @param \RS\Http\Requests\Waybill\GetExciseCodesRequest $request
+     * Retrieve error codes
+     * @param \RS\Http\Requests\Waybill\WaybillReferenceRequest $request
      * @return array
      */
-    public function getExciseCodes(GetExciseCodesRequest $request = new GetExciseCodesRequest()): array
+    public function getErrorCodes(WaybillReferenceRequest $request = new WaybillReferenceRequest(WaybillServiceAction::GET_ERROR_CODES->value, GetErrorCodesResponse::class)): array
+    {
+        return $this->connector->send($request)->parsed();
+    }
+
+    /**
+     * Retrieve excise codes
+     * @param \RS\Http\Requests\Waybill\WaybillReferenceRequest $request
+     * @return array
+     */
+    public function getExciseCodes(WaybillReferenceRequest $request = new WaybillReferenceRequest(WaybillServiceAction::GET_EXCISE_CODES->value, GetExciseCodesResponse::class)): array
     {
         return $this->connector->send($request)->parsed();
     }
     /**
      * Retrieve waybill types
-     * @param \RS\Http\Requests\Waybill\GetWaybillTypesRequest $request
+     * @param \RS\Http\Requests\Waybill\WaybillReferenceRequest $request
      * @return array
      */
-    public function getWaybillTypes(GetWaybillTypesRequest $request = new GetWaybillTypesRequest()): array
+    public function getWaybillTypes(WaybillReferenceRequest $request = new WaybillReferenceRequest(WaybillServiceAction::GET_WAYBILL_TYPES->value, GetWaybillTypesResponse::class)): array
+    {
+        return $this->connector->send($request)->parsed();
+    }
+
+    /**
+     * Retrieve waybill types
+     * @param \RS\Http\Requests\Waybill\WaybillReferenceRequest $request
+     * @return array
+     */
+    public function getWaybillUnits(WaybillReferenceRequest $request = new WaybillReferenceRequest(WaybillServiceAction::GET_WAYBILL_UNITS->value, GetWaybillUnitsResponse::class)): array
+    {
+        return $this->connector->send($request)->parsed();
+    }
+
+    /**
+     * Retrieve transportation types
+     * @param \RS\Http\Requests\Waybill\WaybillReferenceRequest $request
+     * @return array
+     */
+    public function getTransportationTypes(WaybillReferenceRequest $request = new WaybillReferenceRequest(WaybillServiceAction::GET_TRANSPORTATION_TYPES->value, GetTransportationTypesResponse::class)): array
+    {
+        return $this->connector->send($request)->parsed();
+    }
+    /**
+     * Retrieve transportation types
+     * @param \RS\Http\Requests\Waybill\WaybillReferenceRequest $request
+     * @return array
+     */
+    public function getWoodTypes(WaybillReferenceRequest $request = new WaybillReferenceRequest(WaybillServiceAction::GET_WOOD_TYPES->value, GetWoodTypesResponse::class)): array
     {
         return $this->connector->send($request)->parsed();
     }

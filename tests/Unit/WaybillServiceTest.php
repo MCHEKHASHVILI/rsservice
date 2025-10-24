@@ -46,15 +46,24 @@ describe("Check Service User:", function () {
     });
 });
 
-describe('Get Excise Codes:', function () {
-    test("got array of excise codes", function () {
+describe("Retrieving reference information", function () {
+    test("error codes", function () {
+        expect($this->service->getErrorCodes())->toBeArray("Result must be array");
+    });
+    test("excise codes", function () {
         expect($this->service->getExciseCodes())->toBeArray("Result must be array");
     });
-});
-
-describe('Get Waybill Types:', function () {
-    test("got array of waybill types", function () {
+    test("waybill types", function () {
         expect($this->service->getWaybillTypes())->toBeArray("Result must be array");
+    });
+    test("wood types", function () {
+        expect($this->service->getWoodTypes())->toBeArray("Result must be array");
+    });
+    test("transportation types", function () {
+        expect($this->service->getTransportationTypes())->toBeArray("Result must be array");
+    });
+    test("waybill units", function () {
+        expect($this->service->getWaybillUnits())->toBeArray("Result must be array");
     });
 });
 
