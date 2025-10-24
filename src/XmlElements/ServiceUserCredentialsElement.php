@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace RS\Requests\Waybill\BodyElements;
+namespace RS\XmlElements;
 
 use Saloon\XmlWrangler\Data\Element;
 
-class DefaultBodyElement extends Element
+class ServiceUserCredentialsElement extends Element
 {
     protected function compose(): void
     {

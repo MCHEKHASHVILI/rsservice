@@ -2,18 +2,17 @@
 
 declare(strict_types=1);
 
-namespace RS\Responses\Waybill;
+namespace RS\Http\Responses\Waybill;
 
-use Saloon\Http\Response;
+use RS\Http\Responses\Waybill\WaybillServiceResponse;
 
-abstract class WaybillServiceResponse extends Response
+class GetWaybillResponse extends WaybillServiceResponse
 {
-    protected $SOAPActionPrefix = "http://tempuri.org/";
     public function parsed(): mixed
     {
         return $this->xmlReader()
             ->value("soap:Envelope.soap:Body.{$this->getSOAPAction()}Response")
-            ->sole()["{$this->getSOAPAction()}Result"];
+            ->sole();
     }
 
     protected function getSOAPAction(): string

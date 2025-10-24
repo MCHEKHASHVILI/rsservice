@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
  * @property mixed $connector
  * @property mixed $request
  * @property mixed $response
+ * @property mixed $service
  */
 #[\AllowDynamicProperties]
 abstract class TestCase extends BaseTestCase
