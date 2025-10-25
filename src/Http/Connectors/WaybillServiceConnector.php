@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace RS\Http\Connectors;
 
 use Saloon\Http\Connector;
-use RS\Enums\SoapApiEndpoint;
+use RS\Enums\Endpoints\SoapApiEndpoint;
 use RS\Enums\SoapApiRequestHeader;
 use Saloon\Traits\Plugins\AlwaysThrowOnErrors;
 

@@ -4,6 +4,7 @@ use RS\Services\WaybillService;
 use RS\Enums\SoapUserCredentials;
 use Saloon\XmlWrangler\XmlWriter;
 use RS\Enums\Actions\WaybillServiceAction;
+use RS\Http\Requests\Waybill\WaybillServiceRequest;
 use RS\Http\Requests\Waybill\WaybillServiceAuthRequest;
 use Saloon\Exceptions\Request\Statuses\NotFoundException;
 use Saloon\Exceptions\Request\Statuses\UnauthorizedException;
@@ -78,12 +79,12 @@ describe("Retrieving reference information", function () {
 describe('Retrieve waybill:', function () {
     describe("by id:", function () {
         test("valid id", function () {
-            $result = $this->service->getWaybillByID('975534966');
+            $result = $this->service->getWaybillById('975534966');
             expect($result)->toBeArray("Result must be array");
             expect(array_keys($result))->toContain("ID", "WAYBILL_NUMBER");
         });
         it("throws \Saloon\Exceptions\Request\Statuses\NotFoundException on invalid id", function () {
-            $this->service->getWaybillByID('1234567890');
+            $this->service->getWaybillById('1234567890');
         })->throws(NotFoundException::class);
     });
     describe("by waybill number:", function () {
@@ -98,6 +99,26 @@ describe('Retrieve waybill:', function () {
     });
 });
 
-test("getting all waybills", function () {
-    expect($this->service->getWaybills())->toBeArray("Expected Array of waybills");
+define("retrieve waybills", function () {
+    define("get all waybills", function () {
+        test("valid credentials", function () {
+            expect($this->service->getWaybills())->toBeArray("Expected Array of waybills");
+        });
+        it("invalid credentials", function () {
+            $request = new WaybillServiceRequest(WaybillServiceAction::GET_WAYBILLS);
+            $request->body()->set(
+                XmlWriter::make()->write(
+                    $request->defaultRootElement(),
+                    $request->generateBodyElement(
+                        SoapUserCredentials::SERVICE_USER,
+                        [
+                            "su" => "invalid_username",
+                            "sp" => "invalid_password",
+                        ]
+                    ),
+                )
+            );
+            $this->service->getWaybills($request);
+        })->throws(NotFoundException::class);
+    });
 });

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RS\Enums;
+namespace RS\Enums\Endpoints;
 
 enum SoapApiEndpoint: string
 {

@@ -7,11 +7,8 @@ namespace RS\Services;
 use RS\Traits\HasReferences;
 use RS\Enums\SoapUserCredentials;
 use Saloon\XmlWrangler\XmlWriter;
-use RS\Enums\SoapApiRequestHeader;
-use Saloon\XmlWrangler\Data\Element;
 use RS\Enums\Actions\WaybillServiceAction;
 use RS\Http\Connectors\WaybillServiceConnector;
-use RS\XmlElements\ServiceUserCredentialsElement;
 use RS\Http\Requests\Waybill\WaybillServiceRequest;
 use RS\Http\Requests\Waybill\WaybillServiceAuthRequest;
 
@@ -99,7 +96,7 @@ final class WaybillService
         return $this->connector->send($request)->parsed();
     }
 
-    public function getWaybills(array $waybillTypes = [], WaybillServiceRequest $request = new WaybillServiceRequest(WaybillServiceAction::GET_WAYBILLS))
+    public function getWaybills(WaybillServiceRequest $request = new WaybillServiceRequest(WaybillServiceAction::GET_WAYBILLS), array $waybillTypes = [])
     {
         return $this->connector->send($request)->parsed();
     }
