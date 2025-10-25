@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace RS\Services;
 
 use RS\Traits\HasReferences;
+use RS\Enums\SoapUserCredentials;
 use Saloon\XmlWrangler\XmlWriter;
 use RS\Enums\SoapApiRequestHeader;
 use Saloon\XmlWrangler\Data\Element;
+use RS\Enums\Actions\WaybillServiceAction;
 use RS\Http\Connectors\WaybillServiceConnector;
-use RS\Http\Requests\Waybill\GetWaybillRequest;
 use RS\XmlElements\ServiceUserCredentialsElement;
-use RS\Http\Requests\Waybill\CheckServiceUserRequest;
+use RS\Http\Requests\Waybill\WaybillServiceRequest;
+use RS\Http\Requests\Waybill\WaybillServiceAuthRequest;
 
 final class WaybillService
 {
@@ -25,74 +27,80 @@ final class WaybillService
     ) {}
 
     /**
+     * Cheking service user
+     * @param \RS\Http\Requests\Waybill\WaybillServiceAuthRequest $request
+     * @return array
+     */
+    public function checkServiceUser(WaybillServiceAuthRequest $request = new WaybillServiceAuthRequest(WaybillServiceAction::CHECK_SERVICE_USER)): array
+    {
+        return $this->connector->send($request)->parsed();
+    }
+
+    /**
      * Check if the service user is registered
-     * @param \RS\Http\Requests\Waybill\CheckServiceUserRequest $request
      * @return bool
      */
-    public function serviceUserIsRegistered(CheckServiceUserRequest $request = new CheckServiceUserRequest()): bool
+    public function serviceUserIsRegistered(): bool
     {
-        return $this->connector->send($request)->isRegistered();
+        return strtolower($this->checkServiceUser()[WaybillServiceAction::CHECK_SERVICE_USER->getActionName() . "Result"]) === "true";
     }
 
     /**
      * Retrieve Service User ID
-     * @param \RS\Http\Requests\Waybill\CheckServiceUserRequest $request
      * @return int
      */
-    public function getServiceUserId(CheckServiceUserRequest $request = new CheckServiceUserRequest()): int
+    public function getServiceUserId(): int
     {
-        return $this->connector->send($request)->getServiceUserId();
+        return (int) $this->checkServiceUser()["s_user_id"];
     }
 
     /**
      * Retriewe payer's UN_ID
-     * @param \RS\Http\Requests\Waybill\CheckServiceUserRequest $request
      * @return int
      */
-    public function getPayersId(CheckServiceUserRequest $request = new CheckServiceUserRequest()): int
+    public function getPayersId(): int
     {
-        return $this->connector->send($request)->getPayersUnId();
+        return (int) $this->checkServiceUser()["un_id"];
     }
-
-
-
-    public function getWaybillById(string $waybillId, GetWaybillRequest $request = new GetWaybillRequest())
+    /**
+     * Get Waybill by waybill_id
+     * @param string $id
+     * @param \RS\Http\Requests\Waybill\WaybillServiceRequest $request
+     */
+    public function getWaybillById(string $id, WaybillServiceRequest $request = new WaybillServiceRequest(WaybillServiceAction::GET_WAYBILL))
     {
         $request->body()->set(XmlWriter::make()->write(
             $request->defaultRootElement(),
-            [
-                "soap:Body" => [
-                    $request->action => Element::make(
-                        array_merge(
-                            (new ServiceUserCredentialsElement())->getContent(),
-                            ["waybill_id" => $waybillId]
-                        )
-                    )->addAttribute("xmlns", SoapApiRequestHeader::ACTION_URL->value)
-
+            $request->generateBodyElement(
+                SoapUserCredentials::SERVICE_USER,
+                [
+                    "waybill_id" => $id
                 ]
-            ]
+            ),
         ));
-
+        return $this->connector->send($request)->parsed();
+    }
+    /**
+     * Get Waybill by waybill_number
+     * @param string $number
+     * @param \RS\Http\Requests\Waybill\WaybillServiceRequest $request
+     */
+    public function getWaybillByNumber(string $number, WaybillServiceRequest $request = new WaybillServiceRequest(WaybillServiceAction::GET_WAYBILL_BY_NUMBER))
+    {
+        $request->body()->set(XmlWriter::make()->write(
+            $request->defaultRootElement(),
+            $request->generateBodyElement(
+                SoapUserCredentials::SERVICE_USER,
+                [
+                    "waybill_number" => $number
+                ]
+            ),
+        ));
         return $this->connector->send($request)->parsed();
     }
 
-    public function getWaybillByNumber(string $number, GetWaybillRequest $request = new GetWaybillRequest("get_waybill_by_number"))
+    public function getWaybills(array $waybillTypes = [], WaybillServiceRequest $request = new WaybillServiceRequest(WaybillServiceAction::GET_WAYBILLS))
     {
-        $request->body()->set(XmlWriter::make()->write(
-            $request->defaultRootElement(),
-            [
-                "soap:Body" => [
-                    $request->action => Element::make(
-                        array_merge(
-                            (new ServiceUserCredentialsElement())->getContent(),
-                            ["waybill_number" => $number]
-                        )
-                    )->addAttribute("xmlns", SoapApiRequestHeader::ACTION_URL->value)
-
-                ]
-            ]
-        ));
-
         return $this->connector->send($request)->parsed();
     }
 }

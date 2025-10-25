@@ -1,10 +1,10 @@
 <?php
 
 use RS\Services\WaybillService;
+use RS\Enums\SoapUserCredentials;
 use Saloon\XmlWrangler\XmlWriter;
-use RS\Enums\SoapApiRequestHeader;
-use Saloon\XmlWrangler\Data\Element;
-use RS\Http\Requests\Waybill\CheckServiceUserRequest;
+use RS\Enums\Actions\WaybillServiceAction;
+use RS\Http\Requests\Waybill\WaybillServiceAuthRequest;
 use Saloon\Exceptions\Request\Statuses\NotFoundException;
 use Saloon\Exceptions\Request\Statuses\UnauthorizedException;
 
@@ -23,25 +23,21 @@ describe("Check Service User:", function () {
         });
     });
     describe("Invalid Credentials:", function () {
-        beforeEach(function () {
-            $request = new CheckServiceUserRequest();
-            $request->body()->set(XmlWriter::make()->write(
-                $request->defaultRootElement(),
-                [
-                    "soap:Body" => [
-                        $request->action => Element::make([
-                            "su" => "invalid_su",
-                            "sp" => "invalid_sp",
-                        ])
-                            ->addAttribute("xmlns", SoapApiRequestHeader::ACTION_URL->value)
-                    ]
-                ]
-            ));
-            $this->request = $request;
-        });
-
         it("throws \Saloon\Exceptions\Request\Statuses\UnauthorizedException on Invalid Credentials", function () {
-            $this->service->serviceUserIsRegistered($this->request);
+            $request = new WaybillServiceAuthRequest(WaybillServiceAction::CHECK_SERVICE_USER);
+            $request->body()->set(
+                XmlWriter::make()->write(
+                    $request->defaultRootElement(),
+                    $request->generateBodyElement(
+                        SoapUserCredentials::SERVICE_USER,
+                        [
+                            "su" => "invalid_username",
+                            "sp" => "invalid_password",
+                        ]
+                    ),
+                )
+            );
+            $this->service->checkServiceUser($request);
         })->throws(UnauthorizedException::class);
     });
 });
@@ -68,20 +64,28 @@ describe("Retrieving reference information", function () {
 });
 
 describe('Retrieve waybill:', function () {
-    describe("by valid inputs:", function () {
-        test("id", function () {
-            expect($this->service->getWaybillByID('975534966'))->toBeArray("Result must be array");
+    describe("by id:", function () {
+        test("valid id", function () {
+            $result = $this->service->getWaybillByID('975534966');
+            expect($result)->toBeArray("Result must be array");
+            expect(array_keys($result))->toContain("ID", "WAYBILL_NUMBER");
         });
-        test("number", function () {
-            expect($this->service->getWaybillByNumber('0935463264'))->toBeArray("Result must be array");
-        });
-    });
-    describe("by invalid inputs:", function () {
         it("throws \Saloon\Exceptions\Request\Statuses\NotFoundException on invalid id", function () {
             $this->service->getWaybillByID('1234567890');
         })->throws(NotFoundException::class);
+    });
+    describe("by waybill number:", function () {
+        test("valid number", function () {
+            $result = $this->service->getWaybillByNumber('0935463264');
+            expect($result)->toBeArray("Result must be array");
+            expect(array_keys($result))->toContain("ID", "WAYBILL_NUMBER");
+        });
         it("throws \Saloon\Exceptions\Request\Statuses\NotFoundException on invalid number", function () {
             $this->service->getWaybillByNumber('1234567890');
         })->throws(NotFoundException::class);
     });
+});
+
+test("getting all waybills", function () {
+    expect($this->service->getWaybills())->toBeArray("Expected Array of waybills");
 });
