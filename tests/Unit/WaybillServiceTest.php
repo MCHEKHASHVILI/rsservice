@@ -44,22 +44,34 @@ describe("Check Service User:", function () {
 
 describe("Retrieving reference information", function () {
     test("error codes", function () {
-        expect($this->service->getErrorCodes())->toBeArray("Result must be array");
+        $result = $this->service->getErrorCodes();
+        expect($result)->toBeArray("Result must be array");
+        expect(array_keys($result[0]))->toBeArray("Result must be array");
     });
     test("excise codes", function () {
-        expect($this->service->getExciseCodes())->toBeArray("Result must be array");
+        $result = $this->service->getExciseCodes();
+        expect($result)->toBeArray("Result must be array");
+        expect(array_keys($result[0]))->toContain("ID");
     });
     test("waybill types", function () {
-        expect($this->service->getWaybillTypes())->toBeArray("Result must be array");
+        $result = $this->service->getWaybillTypes();
+        expect($result)->toBeArray("Result must be array");
+        expect(array_keys($result[0]))->toContain("ID");
     });
     test("wood types", function () {
-        expect($this->service->getWoodTypes())->toBeArray("Result must be array");
+        $result = $this->service->getWoodTypes();
+        expect($result)->toBeArray("Result must be array");
+        expect(array_keys($result[0]))->toContain("ID");
     });
     test("transportation types", function () {
-        expect($this->service->getTransportationTypes())->toBeArray("Result must be array");
+        $result = $this->service->getTransportationTypes();
+        expect($result)->toBeArray("Result must be array");
+        expect(array_keys($result[0]))->toContain("ID");
     });
     test("waybill units", function () {
-        expect($this->service->getWaybillUnits())->toBeArray("Result must be array");
+        $result = $this->service->getWaybillUnits();
+        expect($result)->toBeArray("Result must be array");
+        expect(array_keys($result[0]))->toContain("ID");
     });
 });
 
